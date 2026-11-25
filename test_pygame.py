@@ -7,7 +7,9 @@ clock = pygame.time.Clock()
 running = True
 # test_ghost = pygame.image.load("/Users/el attar/Desktop/pacman/test_ghost.jpg")
 test_ghost = pygame.image.load("/home/kael-att/pacman/test_ghost.jpg")
+pac_droite = pygame.image.load("/home/kael-att/pacman/pac_droite.jpg")
 img_test_ghost = pygame.transform.scale(test_ghost, (40, 40))
+img_test_pac = pygame.transform.scale(pac_droite, (40, 40))
 
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 1200
@@ -28,6 +30,18 @@ player_mouv = pygame.Vector2(1, 0)
 
 dt = clock.tick(60) / 1000
 
+pac_right = pygame.transform.rotate(img_test_pac, 0)
+
+pac_left = pygame.transform.rotate(img_test_pac, 180)
+
+pac_top = pygame.transform.rotate(img_test_pac, 90)
+
+pac_bottom = pygame.transform.rotate(img_test_pac, 270)
+
+direction_pac = [
+    pac_right, pac_left, pac_top, pac_bottom
+]
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -42,7 +56,7 @@ while running:
 
     pygame.draw.rect(screen, "red", rect_pos, 2)
 
-    screen.blit(img_test_ghost, (player_pos))
+    screen.blit(img_test_pac, (player_pos))
     
     keys = pygame.key.get_pressed()
     # if keys[pygame.K_UP]:
