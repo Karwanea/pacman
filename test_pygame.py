@@ -6,10 +6,12 @@ screen = pygame.display.set_mode((1200, 1200))
 clock = pygame.time.Clock()
 running = True
 # test_ghost = pygame.image.load("/Users/el attar/Desktop/pacman/test_ghost.jpg")
-test_ghost = pygame.image.load("/home/kael-att/pacman/test_ghost.jpg")
-pac_droite = pygame.image.load("/home/kael-att/pacman/pac_droite.jpg")
-img_test_ghost = pygame.transform.scale(test_ghost, (40, 40))
-img_test_pac = pygame.transform.scale(pac_droite, (40, 40))
+img_test_ghost = pygame.image.load("/home/kael-att/pacman/test_ghost.jpg")
+img_pac_droite = pygame.image.load("/home/kael-att/pacman/pac_droite.jpg")
+img_pac_ferme = pygame.image.load("/home/kael-att/pacman/pac_ferme.jpg")
+test_ghost = pygame.transform.scale(img_test_ghost, (40, 40))
+test_pac = pygame.transform.scale(img_pac_droite, (40, 40))
+pac_ferme = pygame.transform.scale(img_pac_ferme, (40, 40))
 
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 1200
@@ -30,17 +32,23 @@ player_mouv = pygame.Vector2(1, 0)
 
 dt = clock.tick(60) / 1000
 
-pac_right = pygame.transform.rotate(img_test_pac, 0)
+pac_right = pygame.transform.rotate(test_pac, 0)
 
-pac_left = pygame.transform.rotate(img_test_pac, 180)
+pac_left = pygame.transform.rotate(test_pac, 180)
 
-pac_top = pygame.transform.rotate(img_test_pac, 90)
+pac_top = pygame.transform.rotate(test_pac, 90)
 
-pac_bottom = pygame.transform.rotate(img_test_pac, 270)
+pac_bottom = pygame.transform.rotate(test_pac, 270)
 
-direction_pac = [
-    pac_right, pac_left, pac_top, pac_bottom
-]
+direction_pac = {
+    "right": pac_right, "left": pac_left, "up": pac_top, "bottom": pac_bottom, "False": pac_ferme
+}
+
+way = "right"
+
+mouth_open = True
+
+anim_timer = 0
 
 while running:
     for event in pygame.event.get():
@@ -56,27 +64,46 @@ while running:
 
     pygame.draw.rect(screen, "red", rect_pos, 2)
 
-    screen.blit(img_test_pac, (player_pos))
+    anim_timer += dt
+    if anim_timer >= 2.0:
+        mouth_open = not mouth_open
+        anim_timer -= 2.0
+    if mouth_open == True:
+        screen.blit(direction_pac[way], (player_pos))
+    if not mouth_open:
+        screen.blit(pac_ferme, (player_pos))
     
     keys = pygame.key.get_pressed()
-    # if keys[pygame.K_UP]:
-    #     circle_pos.y -= 250 * dt
-    # if keys[pygame.K_DOWN]:
-    #     circle_pos.y += 250 * dt
-    # if keys[pygame.K_LEFT]:
-    #     circle_pos.x -= 250 * dt
-    # if keys[pygame.K_RIGHT]:
-    #     circle_pos.x += 250 * dt
 
     if keys[pygame.K_w]:
         player_mouv = (0, -1)
+        way = "up"
+        # anim_timer += dt
+        # if anim_timer >= 0.1:
+        #     mouth_open = not mouth_open
+        #     anim_timer = 0
     if keys[pygame.K_s]:
         player_mouv = (0, 1)
+        way = "bottom"
+        # anim_timer += dt
+        # if anim_timer >= 0.1:
+        #     mouth_open = not mouth_open
+        #     anim_timer = 0
     if keys[pygame.K_a]:
         player_mouv = (-1, 0)
+        way = "left"
+        # anim_timer += dt
+        # if anim_timer >= 0.1:
+        #     mouth_open = not mouth_open
+        #     anim_timer = 0
     if keys[pygame.K_d]:
         player_mouv = (1, 0)
- 
+        way = "right"
+        # anim_timer += dt
+        # if anim_timer >= 0.1:
+        #     mouth_open = not mouth_open
+        #     anim_timer = 0
+    
 
     target = player_pos + (pygame.Vector2(player_mouv) * 10 * dt)
     real_target_x = max(203, min(target.x ,957))
@@ -111,3 +138,15 @@ pygame.quit()
     #     new_x = player_pos.x + 600 * dt
     #     if new_x + 40 <= rect_pos.right:
     #         player_pos.x += 600 * dt
+    # 
+    # 
+    # 
+    # 
+    #     # if keys[pygame.K_UP]:
+    #     circle_pos.y -= 250 * dt
+    # if keys[pygame.K_DOWN]:
+    #     circle_pos.y += 250 * dt
+    # if keys[pygame.K_LEFT]:
+    #     circle_pos.x -= 250 * dt
+    # if keys[pygame.K_RIGHT]:
+    #     circle_pos.x += 250 * dt
